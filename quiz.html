@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz — B Skin Legacy Invest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080808;
+  --surface:#111111;
+  --surface2:#1a1a1a;
+  --border:#2a2a2a;
+  --gold:#C9A94D;
+  --gold-dim:#8B6B1A;
+  --gold-bg:rgba(201,169,77,0.08);
+  --white:#F5F0E8;
+  --gray:#888;
+  --green:#22c55e;
+  --green-bg:rgba(34,197,94,0.1);
+  --red:#ef4444;
+  --red-bg:rgba(239,68,68,0.1);
+  --radius:12px;
+}
+html{min-height:100%;background:var(--bg)}
+body{font-family:'Inter',sans-serif;color:var(--white);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:24px 16px 60px;background:radial-gradient(ellipse at 50% 0%,#1a1200 0%,#080808 60%)}
+
+/* LOGO */
+.logo{text-align:center;margin-bottom:32px}
+.logo-script{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;font-size:2.4rem;color:var(--white);line-height:1;letter-spacing:-1px}
+.logo-sub{font-family:'Inter',sans-serif;font-weight:300;font-size:0.65rem;letter-spacing:0.35em;color:var(--gold);text-transform:uppercase;margin-top:2px;display:flex;align-items:center;justify-content:center;gap:8px}
+.logo-sub::before,.logo-sub::after{content:'';flex:1;max-width:28px;height:1px;background:var(--gold)}
+
+/* MODULE BADGE */
+.module-badge{display:inline-flex;align-items:center;gap:8px;background:var(--gold-bg);border:1px solid var(--gold-dim);border-radius:100px;padding:6px 16px;font-size:0.75rem;font-weight:500;letter-spacing:0.08em;color:var(--gold);text-transform:uppercase;margin-bottom:20px}
+
+/* PROGRESS */
+.progress-wrap{width:100%;max-width:640px;margin-bottom:28px}
+.progress-info{display:flex;justify-content:space-between;font-size:0.75rem;color:var(--gray);margin-bottom:8px}
+.progress-bar{height:3px;background:var(--border);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--gold-dim),var(--gold));border-radius:4px;transition:width 0.4s ease}
+
+/* CARD */
+.card{width:100%;max-width:640px;background:var(--surface);border:1px solid var(--border);border-radius:20px;overflow:hidden}
+.question-header{padding:28px 28px 20px;border-bottom:1px solid var(--border)}
+.q-number{font-size:0.7rem;color:var(--gold);letter-spacing:0.15em;text-transform:uppercase;font-weight:500;margin-bottom:10px}
+.q-text{font-family:'Cormorant Garamond',serif;font-size:1.45rem;font-weight:400;line-height:1.4;color:var(--white)}
+
+/* ANSWERS */
+.answers{padding:20px 28px 28px;display:flex;flex-direction:column;gap:10px}
+.answer-btn{display:flex;align-items:center;gap:14px;padding:14px 18px;background:transparent;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;text-align:left;transition:all 0.18s ease;color:var(--white);font-family:'Inter',sans-serif;font-size:0.9rem;line-height:1.4;width:100%}
+.answer-btn:hover:not(:disabled){border-color:var(--gold-dim);background:var(--gold-bg)}
+.answer-btn:disabled{cursor:default}
+.letter{width:30px;height:30px;min-width:30px;border-radius:50%;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:600;color:var(--gray);transition:all 0.18s ease}
+.answer-btn.correct{border-color:var(--green);background:var(--green-bg)}
+.answer-btn.correct .letter{background:var(--green);border-color:var(--green);color:#000}
+.answer-btn.wrong{border-color:var(--red);background:var(--red-bg)}
+.answer-btn.wrong .letter{background:var(--red);border-color:var(--red);color:#fff}
+.answer-btn.reveal{border-color:var(--green);background:var(--green-bg);opacity:0.6}
+.answer-btn.reveal .letter{background:var(--green);border-color:var(--green);color:#000}
+
+/* FEEDBACK */
+.feedback{margin:0 28px 24px;padding:14px 16px;border-radius:10px;font-size:0.85rem;line-height:1.5;display:none}
+.feedback.show{display:block}
+.feedback.correct-fb{background:var(--green-bg);border:1px solid rgba(34,197,94,0.25);color:#86efac}
+.feedback.wrong-fb{background:var(--red-bg);border:1px solid rgba(239,68,68,0.25);color:#fca5a5}
+.feedback-icon{font-size:1rem;margin-right:6px}
+
+/* NEXT BTN */
+.next-wrap{padding:0 28px 28px;display:none}
+.next-wrap.show{display:block}
+.next-btn{width:100%;padding:14px;background:var(--gold);color:#000;border:none;border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:0.9rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;transition:opacity 0.2s}
+.next-btn:hover{opacity:0.88}
+
+/* SCORE SCREEN */
+.score-screen{width:100%;max-width:640px;text-align:center;display:none}
+.score-circle{width:140px;height:140px;border-radius:50%;margin:0 auto 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;border:3px solid var(--gold);position:relative}
+.score-circle.pass{border-color:var(--green);box-shadow:0 0 40px rgba(34,197,94,0.2)}
+.score-circle.fail{border-color:var(--red);box-shadow:0 0 40px rgba(239,68,68,0.2)}
+.score-num{font-family:'Cormorant Garamond',serif;font-size:3rem;font-weight:300;line-height:1}
+.score-pct{font-size:0.75rem;color:var(--gray);letter-spacing:0.1em}
+.score-verdict{font-family:'Cormorant Garamond',serif;font-size:2rem;margin-bottom:12px}
+.score-sub{font-size:0.85rem;color:var(--gray);max-width:360px;margin:0 auto 32px;line-height:1.6}
+.retry-btn{padding:12px 32px;background:transparent;border:1px solid var(--gold-dim);border-radius:var(--radius);color:var(--gold);font-family:'Inter',sans-serif;font-size:0.85rem;cursor:pointer;transition:all 0.2s}
+.retry-btn:hover{background:var(--gold-bg)}
+.score-breakdown{margin-top:28px;display:flex;gap:16px;justify-content:center}
+.breakdown-item{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-align:center}
+.breakdown-num{font-family:'Cormorant Garamond',serif;font-size:1.8rem;font-weight:300}
+.breakdown-label{font-size:0.7rem;color:var(--gray);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px}
+
+/* INTRO */
+.intro-screen{width:100%;max-width:640px;text-align:center}
+.intro-title{font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;margin-bottom:12px;line-height:1.1}
+.intro-title span{color:var(--gold)}
+.intro-sub{color:var(--gray);font-size:0.9rem;line-height:1.6;max-width:440px;margin:0 auto 32px}
+.intro-rules{display:flex;flex-direction:column;gap:10px;margin-bottom:32px;text-align:left}
+.rule{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;font-size:0.85rem}
+.rule-icon{font-size:1.1rem;min-width:24px;text-align:center}
+.start-btn{width:100%;padding:16px;background:var(--gold);color:#000;border:none;border-radius:var(--radius);font-family:'Inter',sans-serif;font-size:1rem;font-weight:600;cursor:pointer;letter-spacing:0.04em;transition:opacity 0.2s}
+.start-btn:hover{opacity:0.88}
+
+/* DECORATIVE */
+.gold-line{width:60px;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);margin:16px auto}
+
+@media(max-width:480px){
+  .logo-script{font-size:1.9rem}
+  .q-text{font-size:1.25rem}
+  .score-breakdown{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div class="logo">
+  <div class="logo-script">B Skin</div>
+  <div class="logo-sub">Legacy &nbsp;—&nbsp; Invest</div>
+</div>
+
+<div id="app"></div>
+
+<script>
+const MODULES = {
+  1: {
+    title: "Module 01",
+    subtitle: "Prérequis scientifiques",
+    questions: [
+      {q:"Quelle est la phase du cycle pilaire optimale pour l'électro-épilation ?",options:["Catagène — phase de transition","Télogène — phase de repos","Anagène — phase de croissance active","Exogène — phase d'expulsion"],correct:2,explanation:"✅ La phase anagène est la seule phase optimale. Le follicule est profond, bien hydraté et la papille est accessible — conditions idéales pour la destruction définitive."},
+      {q:"Où se situe précisément la papille dermique ?",options:["Dans l'épiderme, couche supérieure","À la base du bulbe folliculaire, dans le derme","Dans l'hypoderme, tissu adipeux","Dans le cortex du poil"],correct:1,explanation:"✅ La papille dermique est au centre vasculaire du bulbe. C'est elle qui pilote la phase anagène — c'est la cible principale de l'électro-épilation."},
+      {q:"Quelle hormone stimule principalement la croissance pilaire ?",options:["Œstrogènes — freinent la croissance","Cortisol — hormone du stress","Insuline — régule la glycémie","Testostérone / DHT — androgènes actifs"],correct:3,explanation:"✅ La testostérone et la DHT (dihydrotestostérone) stimulent les follicules dans les zones hormono-dépendantes. C'est pourquoi l'hirsutisme est souvent d'origine hormonale."},
+      {q:"Combien de typologies clientes BSL identifie-t-on ?",options:["2 typologies","3 typologies","4 typologies","6 typologies"],correct:2,explanation:"✅ BSL identifie 4 typologies : hirsutisme (SOPK/hormonal), repousse paradoxale post-laser/cire, hommes, et finitions post-laser (poils blancs/fins)."},
+      {q:"Le poil en phase télogène est-il optimal pour l'électrolyse ?",options:["Vrai — le poil est prêt à tomber","Faux — la phase anagène est la seule optimale"],correct:1,explanation:"❌ FAUX. En télogène, le follicule est en repos. La papille est peu accessible et le follicule est peu hydraté. Résultat insuffisant."},
+      {q:"Les œstrogènes freinent-ils la croissance pilaire ?",options:["Vrai — ils ont un effet inhibiteur","Faux — ils stimulent la pilosité"],correct:0,explanation:"✅ VRAI. Les œstrogènes freinent la croissance pilaire, contrairement aux androgènes (testostérone, DHT) qui la stimulent."},
+      {q:"L'hypoderme contient-il la papille dermique ?",options:["Vrai — elle est dans le tissu adipeux","Faux — elle est dans le derme"],correct:1,explanation:"❌ FAUX. La papille dermique se trouve dans le derme (couche intermédiaire), pas dans l'hypoderme. C'est le derme qui est la cible de l'électro-épilation."},
+      {q:"La phase anagène dure-t-elle entre 2 et 7 ans selon la zone ?",options:["Vrai — durée variable selon la zone","Faux — elle dure toujours exactement 3 mois"],correct:0,explanation:"✅ VRAI. La phase anagène dure 2 à 7 ans (cheveux) ou 2 à 5 ans selon la zone du corps. C'est pourquoi plusieurs séances sont nécessaires."},
+      {q:"Quel est l'organe le plus lourd du corps humain ?",options:["Le foie","Le cerveau","La peau","Les muscles"],correct:2,explanation:"✅ La peau pèse environ 3,5 kg (sans la graisse). Elle représente 1,75 m² de surface et contient 20% de l'eau du corps."},
+      {q:"Quelle structure doit être neutralisée pour une inactivité pilaire durable ?",options:["Le cortex du poil","La médulle","Le bulge (réservoir de cellules souches)","L'infundibulum"],correct:2,explanation:"✅ Le bulge contient les cellules souches du follicule. Pour un résultat définitif, la papille ET le bulge doivent être neutralisés ensemble."},
+    ]
+  },
+  2: {
+    title: "Module 02",
+    subtitle: "Les 3 techniques",
+    questions: [
+      {q:"Quelle fréquence utilise la thermolyse Apilus brevetée ?",options:["13.56 MHz — fréquence ancienne génération","27.12 MHz — fréquence brevetée ISM band","40 MHz — ultra haute fréquence","100 MHz — hyperfréquence"],correct:1,explanation:"✅ 27.12 MHz — fréquence brevetée par Apilus. Jusqu'à 54× plus rapide que les premiers appareils galvaniques."},
+      {q:"Quelle modalité pour les poils fins de la lèvre supérieure ?",options:["Synchro — la plus puissante","Multiplex — énergie distribuée","Picoflash — 1/1000 seconde, zones sensibles","Blend — action combinée"],correct:2,explanation:"✅ Picoflash — millième de seconde. Conçu pour zones sensibles (lèvre, oreilles, joues). Réduit inflammation et hyperpigmentation."},
+      {q:"La technique Blend combine :",options:["Deux modalités flash","Galvanique + thermolyse (Hinkel & St-Pierre, 1945)","Laser + électrolyse","IPL + radiofréquence"],correct:1,explanation:"✅ Blend = galvanique + thermolyse, breveté par Hinkel & St-Pierre en 1945-48. Idéal pour poils profonds anagènes."},
+      {q:"Pour des poils gros et profonds en phase anagène, la modalité recommandée ?",options:["Microflash — ultra brève","Picoflash — nano-impulsion","Synchro 27 MHz — multi-impulsions ultrarapides","Flash isolé — standard"],correct:2,explanation:"✅ Synchro 27 MHz — modalité phare BSL. Plusieurs impulsions synchronisées pour maximiser l'efficacité sur les poils les plus tenaces."},
+      {q:"La thermolyse fonctionne-t-elle uniquement sur les poils foncés ?",options:["Vrai — elle cible la mélanine","Faux — action thermique, indépendante de la mélanine"],correct:1,explanation:"❌ FAUX. Contrairement au laser, la thermolyse agit par chaleur sur la papille, sans cibler la mélanine. Toutes couleurs, toutes carnations."},
+      {q:"La galvanique est-elle plus rapide que la thermolyse 27 MHz ?",options:["Vrai — courant continu plus direct","Faux — galvanique ~30s/poil, thermolyse jusqu'à 54× plus rapide"],correct:1,explanation:"❌ FAUX. La galvanique est très lente (~30 secondes par poil). La thermolyse 27 MHz est jusqu'à 54× plus rapide grâce au brevet Apilus."},
+      {q:"Synchro 27 MHz est-elle une modalité brevetée par Apilus ?",options:["Vrai — modalité exclusive Apilus XCell Pro","Faux — elle est disponible sur tous les appareils"],correct:0,explanation:"✅ VRAI. Synchro 27 MHz est brevetée par Apilus — c'est la modalité phare des Apilus XCell Pro, exclusive à cette marque."},
+      {q:"Le filament IsoBlend est-il obligatoire pour la technique Blend ?",options:["Vrai — isolation Téflon nécessaire pour les deux courants","Faux — n'importe quel filament convient"],correct:0,explanation:"✅ VRAI. L'isolation Téflon de l'IsoBlend est nécessaire pour combiner efficacement les courants galvanique et haute fréquence."},
+      {q:"Quelle réglementation belge encadre la pratique de l'électrolyse galvanique ?",options:["CSS n°9430 (juin 2022) — réservée médecins/infirmiers","Loi du 23 avril 2018 — libre accès","Directive européenne 2019/1 — harmonisée","Aucune réglementation spécifique en Belgique"],correct:0,explanation:"✅ CSS n°9430 (juin 2022) — En Belgique, l'électrolyse galvanique est légalement réservée aux médecins et infirmier(e)s. BSL enseigne la thermolyse, légale pour les esthéticien(ne)s."},
+      {q:"Parmi ces 6 modalités, laquelle n'existe PAS dans la gamme Apilus ?",options:["Picoflash","Meloflash","Synchro 27 MHz","Thermowave"],correct:3,explanation:"✅ Thermowave n'existe pas. Les 6 modalités Apilus sont : Flash, Microflash/Picoflash, Multiplex, Meloflash, Synchro 27 MHz."},
+    ]
+  },
+  3: {
+    title: "Module 03",
+    subtitle: "Matériel & filaments",
+    questions: [
+      {q:"Quel appareil BSL utilise comme standard de référence ?",options:["Sterex Apex — fabrication UK","Apilus XCell Pro — 27 MHz breveté","Biomak Medical — galvanique historique","Clareblend — USA"],correct:1,explanation:"✅ Apilus XCell Pro (Dectro Canada) — 27 MHz breveté, 6 modalités, jusqu'à 54× plus rapide, modalité Synchro exclusive."},
+      {q:"Pour des poils anagènes profonds, quel filament choisir ?",options:["IsoGard ITH — thermolyse superficielle","IsoBlend IBL — blend profond, isolation Téflon","Non isolé — ancienne génération","Pro-Tec F0 — ultra fin"],correct:1,explanation:"✅ IsoBlend IBL — l'isolation Téflon concentre l'énergie au bas du follicule. Idéal pour poils anagènes profonds : menton, bikini, dos, aisselles."},
+      {q:"Quel calibre pour un poil fin de la lèvre supérieure ?",options:["F1 — 4.0mm, poils très fins","F3 — 5.6mm, poils standards","F4 — 6.0mm, poils gros","F5 — 6.6mm, poils très gros"],correct:0,explanation:"✅ F1 — 4.0mm, adapté aux poils très fins. La lèvre supérieure a des poils superficiels et fins — F1 est le bon calibre."},
+      {q:"Quelle est la matière isolante des filaments Pro-Tec ?",options:["Caoutchouc médical","Silicone chirurgical","Téflon de grade médical","PVC alimentaire"],correct:2,explanation:"✅ Téflon de grade médical — concentre l'énergie précisément à la pointe, minimise la chaleur diffuse et réduit les réactions cutanées."},
+      {q:"Les filaments isolés réduisent-ils les réactions cutanées ?",options:["Vrai — l'isolation concentre l'énergie à la pointe","Faux — ils augmentent la chaleur diffuse"],correct:0,explanation:"✅ VRAI. L'isolation Téflon concentre l'énergie à la pointe du filament — moins de chaleur diffusée = moins de réactions = plus de confort cliente."},
+      {q:"F5 est-il plus fin que F1 ?",options:["Vrai — F5 est le plus fin","Faux — F1 (4.0mm) est le plus fin, F5 (6.6mm) le plus gros"],correct:1,explanation:"❌ FAUX. L'inverse : F1 = 4.0mm (plus fin), F5 = 6.6mm (plus gros). Plus le chiffre est grand, plus le calibre est important."},
+      {q:"L'Apilus XCell Pro a-t-il 6 modalités embarquées ?",options:["Vrai — de Flash à Synchro 27 MHz","Faux — il en a seulement 3"],correct:0,explanation:"✅ VRAI. 6 modalités : Flash (1/100s), Microflash/Picoflash (1/1000s), Multiplex, Meloflash, Synchro 27 MHz — couvre tous les cas de figure."},
+      {q:"Que doit-on observer à l'extraction pour choisir le bon filament ?",options:["La couleur du poil uniquement","Le bulbe et la gaine — adapter le calibre en conséquence","La longueur du poil visible","La pigmentation de la peau"],correct:1,explanation:"✅ Observer le bulbe et la gaine à l'extraction. Si la gaine ne correspond pas au calibre choisi → changer de filament immédiatement."},
+      {q:"Quel calibre pour un poil très gros et profond (dos, bikini) ?",options:["F1 — 4.0mm","F2 — 4.8mm","F4-F5 — 6.0-6.6mm","F0 — ultra fin"],correct:2,explanation:"✅ F4-F5 (6.0-6.6mm) pour les gros poils profonds. Adapter le calibre au diamètre du poil et à l'ostium (orifice folliculaire)."},
+      {q:"Mauvais filament = ?",options:["Résultat identique, juste plus lent","Double énergie pour demi-résultat","Meilleur résultat avec plus de passages","Aucun impact sur l'efficacité"],correct:1,explanation:"✅ Mauvais filament = double énergie pour demi-résultat. Le choix du filament est aussi important que le choix de la modalité."},
+    ]
+  },
+  4: {
+    title: "Module 04",
+    subtitle: "Consultation & sécurité",
+    questions: [
+      {q:"Quelle est la durée standard d'une consultation BSL ?",options:["10 minutes — rapide","30 minutes — examen complet + plan","60 minutes — consultation longue","90 minutes — avec traitement"],correct:1,explanation:"✅ 30 minutes — temps nécessaire pour : accueil, examen peau et pilosité, information sur les 3 phases, plan de traitement signé."},
+      {q:"Que signifie la lettre A dans la méthode ABCD ?",options:["Acné — présence de lésions","Asymétrie — un côté ≠ l'autre","Allergie — sensibilité cutanée","Anatomie — structure de la peau"],correct:1,explanation:"✅ Asymétrie — le grain de beauté n'est pas symétrique. Si ABCD positif → orienter vers dermatologue, ne pas traiter."},
+      {q:"La grossesse au 1er trimestre est :",options:["Sans contre-indication — traitement possible","Précaution simple — réduire intensité","Contre-indication absolue — abstention","Permis avec billet médical"],correct:2,explanation:"✅ Contre-indication absolue — abstention totale pendant les 3 premiers mois. Allaitement = précaution. SOPK = continuer avec bilan hormonal."},
+      {q:"Combien de temps dure la phase de nettoyage (phase 1) ?",options:["2 semaines — très courte","1 mois — courte","2-4 mois — phase intensive","1 an — durée totale"],correct:2,explanation:"✅ 2-4 mois — séances toutes les 1-2 semaines pour cibler le maximum de poils en anagène. ~50% de réduction visible à 3 mois."},
+      {q:"Peut-on traiter une cliente sur un grain de beauté si elle insiste ?",options:["Vrai — si elle signe une décharge","Faux — toujours contourner, ABCD obligatoire"],correct:1,explanation:"❌ FAUX. Jamais. Méthode ABCD obligatoire avant tout traitement à proximité. Si positif → dermatologue. Documenter le refus dans la fiche client."},
+      {q:"Le diabète type 2 est-il une contre-indication absolue ?",options:["Vrai — CI absolue dans tous les cas","Faux — précaution, billet médical requis mais traitement possible"],correct:1,explanation:"❌ FAUX. Diabète type 2 = précaution (pas CI absolue). Billet médical requis. Diabète type 1 = contre-indication absolue."},
+      {q:"La fiche client doit contenir :",options:["Identité uniquement","Identité + observations peau/poils + plan de traitement","Historique médical complet","Uniquement le plan de traitement"],correct:1,explanation:"✅ Les 3 sections obligatoires du dossier client BSL : identité, observations peau et pilosité, plan de traitement signé."},
+      {q:"Pendant la phase de nettoyage, les séances ont lieu toutes les :",options:["4-8 semaines — espacées","2-4 semaines — régulières","1-2 semaines — rapprochées","1 mois minimum"],correct:2,explanation:"✅ Toutes les 1-2 semaines en phase 1 (nettoyage) — fréquence rapprochée pour cibler le maximum d'anagènes."},
+      {q:"Un stimulateur cardiaque est :",options:["Une précaution — réduire l'intensité","Une contre-indication absolue à la thermolyse","Permis avec billet cardiologique","Sans impact sur le traitement"],correct:1,explanation:"✅ Contre-indication absolue. Stimulateur cardiaque, implant cochléaire ou rétinien = ne jamais traiter. Billet médical ne lève pas cette CI."},
+      {q:"Pourquoi refuser un traitement est professionnel ?",options:["Ce n'est pas professionnel — refuser = perdre une cliente","Traiter en présence de CI = risque clinique + responsabilité juridique","Seul le médecin peut refuser","On peut traiter avec consentement écrit"],correct:1,explanation:"✅ Refuser protège la cliente ET la praticienne juridiquement. Traiter en présence de contre-indication = risque de brûlures, infections, aggravation."},
+    ]
+  },
+  5: {
+    title: "Module 05",
+    subtitle: "Exécution — les 3 phases",
+    questions: [
+      {q:"Combien d'impulsions maximum par follicule avant réévaluation ?",options:["1 impulsion — règle stricte","2 impulsions — règle d'or BSL","3 impulsions — si poil résiste","5 impulsions — poils tenaces"],correct:1,explanation:"✅ 2 impulsions maximum — règle d'or BSL. Si le poil n'est pas extrait → réévaluer les paramètres (angle, modalité, filament). Ne jamais insister."},
+      {q:"Qu'est-ce que la cataphorèse ?",options:["Une modalité d'épilation haute fréquence","Un soin post-épilatoire électrique apaisant (standard BSL)","Une technique de désinfection des instruments","Un type de filament isolé"],correct:1,explanation:"✅ Soin post-épilatoire électrique apaisant — désormais standard BSL. Apaise l'inflammation, ferme les pores, accélère la cicatrisation."},
+      {q:"L'angle d'insertion au menton est :",options:["15-30° — comme le cou et la gorge","45-50° — visage général","70° — menton, sillon naso-labial, intersourcilier","90° — perpendiculaire"],correct:2,explanation:"✅ 70° pour le menton, sillon naso-labial et intersourcilier. 45-50° pour la majorité du visage. 15-30° pour le cou et la gorge."},
+      {q:"Quel est le conseil post-séance le plus important ?",options:["Exfolier la zone 24h après","Appliquer une crème grasse épaisse","Éviter soleil, chaleur, ne pas gratter pendant 48h","Reprendre la cire dans 24h"],correct:2,explanation:"✅ Éviter soleil et chaleur 48h, ne pas toucher/gratter, hydrater, désinfecter sans alcool. Laisser tomber les croûtelles seules."},
+      {q:"Un saignement systématique est-il normal en électro-épilation ?",options:["Vrai — c'est inévitable","Faux — signale un problème (angle, profondeur, filament)"],correct:1,explanation:"❌ FAUX. Un saignement systématique signale un problème : mauvais angle, profondeur surestimée, gros bulbe, ou papille non détruite. Ajuster les paramètres."},
+      {q:"La cataphorèse est-elle un standard de soin post-séance BSL ?",options:["Vrai — standard systématique","Faux — optionnelle selon la cliente"],correct:0,explanation:"✅ VRAI. La cataphorèse est devenue un standard BSL post-séance : apaise, ferme les pores, accélère la cicatrisation, améliore le confort."},
+      {q:"Une croûtelle ovale, allongée et mauve est signe de qualité ?",options:["Vrai — signe d'une bonne destruction","Faux — croûtelle anormale, signale un filament appuyé"],correct:1,explanation:"❌ FAUX. Croûtelle anormale. Signale que le filament a appuyé trop fort sur la peau. Normale = petite, ronde, rose-brunâtre, taille de l'ostium."},
+      {q:"Peut-on faire plus de 2 impulsions sur un follicule difficile ?",options:["Vrai — si le poil résiste vraiment","Faux — 2 max, puis réévaluation systématique"],correct:1,explanation:"❌ FAUX. Règle BSL stricte : 2 impulsions maximum, puis réévaluation (angle insertion, modalité, profondeur, état du filament)."},
+      {q:"Que faire si le poil résiste au retrait ?",options:["Augmenter l'intensité et réessayer","Forcer avec les brucelles","Ne pas forcer — réévaluer angle, modalité, profondeur, filament","Passer au poil suivant définitivement"],correct:2,explanation:"✅ Ne jamais forcer. Réévaluer : angle d'insertion, modalité utilisée, profondeur, intensité, état du filament. Si follicule déformé, adapter la technique."},
+      {q:"Dans quel ordre se déroule une séance d'électro-épilation ?",options:["Épilatoire → Pré-épilatoire → Post-épilatoire","Pré-épilatoire → Épilatoire → Post-épilatoire","Post-épilatoire → Pré-épilatoire → Épilatoire","Consultation → Épilatoire seulement"],correct:1,explanation:"✅ Pré-épilatoire (préparation) → Épilatoire (insertion-courant-retrait) → Post-épilatoire (cataphorèse-apaisant-conseils). Ordre toujours respecté."},
+    ]
+  },
+  6: {
+    title: "Module 06",
+    subtitle: "Positionnement par zone",
+    questions: [
+      {q:"Durée maximale recommandée par séance sur les sourcils ?",options:["5 minutes — très courte","15 minutes — max sourcils","30 minutes — comme la lèvre","60 minutes — séance longue"],correct:1,explanation:"✅ 15 minutes maximum. Au-delà : fatigue oculaire et précision dégradée. Les sourcils ont seulement ~10% de poils en anagène — travail très progressif."},
+      {q:"Pour la lèvre supérieure, quelle modalité est privilégiée ?",options:["Blend isolé profond","Multiplex — énergie distribuée","Picoflash / ITH sans déplacement — millième de seconde","Galvanique pure — action chimique"],correct:2,explanation:"✅ Picoflash / ITH — zone très sensible avec stimulation possible du nerf trijumeau (larmes, éternuements). Millième de seconde = moins d'inflammation."},
+      {q:"Quelle profondeur typique du poil au bikini ?",options:["1-2 mm — poils superficiels","2-3 mm — profondeur moyenne","3-5 mm — poils profonds anagènes","6-8 mm — très profonds"],correct:2,explanation:"✅ 3-5 mm — parmi les poils les plus profonds du corps. Fortement anagènes et enracinés. Blend isolé + Meloflash/Synchro recommandés."},
+      {q:"Quelle règle d'or de posture pour l'électrolyste ?",options:["Lever les bras pour mieux voir","Avant-bras sur Posiflex, ne pas lever les bras","Travailler debout pour une meilleure vue","Asseoir la cliente très haut"],correct:1,explanation:"✅ Avant-bras sur Posiflex, ne jamais lever les bras — prévient les douleurs chroniques cervicales et d'épaules. Alterner les zones sur les longues sessions."},
+      {q:"On doit travailler face au poil, pas le poil face à nous ?",options:["Vrai — règle absolue, tourner le corps/segment","Faux — la machine s'adapte à la position"],correct:0,explanation:"✅ VRAI — règle absolue. Toujours se positionner face au poil en tournant le corps ou le segment de la cliente. Garantit la précision d'insertion."},
+      {q:"Les sourcils ont environ 90% de poils en phase anagène ?",options:["Vrai — majorité anagène","Faux — inverse : ~10% anagène, ~90% télogène"],correct:1,explanation:"❌ FAUX. L'inverse ! Les sourcils ont ~10% de poils en anagène et ~90% en télogène. C'est pourquoi le traitement des sourcils est très progressif et long."},
+      {q:"Il faut terminer une aisselle avant de passer à l'autre ?",options:["Vrai — limite l'irritation bilatérale","Faux — travailler en alternance stimule la circulation"],correct:0,explanation:"✅ VRAI. Terminer une aisselle avant l'autre limite l'irritation bilatérale et permet de continuer le lendemain sur le côté suivant."},
+      {q:"Pour le bikini, la profondeur typique est 1-2 mm ?",options:["Vrai — poils fins et superficiels","Faux — 3-5 mm, poils profonds fortement anagènes"],correct:1,explanation:"❌ FAUX. 3-5 mm. Les poils du bikini sont parmi les plus profonds du corps — fortement anagènes et enracinés. Blend isolé privilégié."},
+      {q:"Quel angle d'insertion pour la majorité du visage (joues, côtés) ?",options:["15-30° — cou et gorge","45-50° — majorité visage","70° — menton et sillon","90° — perpendiculaire"],correct:1,explanation:"✅ 45-50° pour la majorité du visage et les côtés. 70° pour le menton, sillon naso-labial, intersourcilier. 15-30° pour le cou et la gorge."},
+      {q:"Sur quels phototypes faut-il préférer Picoflash au menton ?",options:["Phototypes I-II uniquement (peaux très claires)","Phototypes III-VI (peaux mates à foncées)","Tous les phototypes sans distinction","Uniquement sur peau sans mélanine"],correct:1,explanation:"✅ Phototypes III-VI — risque élevé d'hyperpigmentation post-inflammatoire sur peaux mates à foncées. Picoflash réduit ce risque significativement."},
+    ]
+  },
+  7: {
+    title: "Module 07",
+    subtitle: "Lancer votre cabinet",
+    questions: [
+      {q:"Quel est le canal d'acquisition #1 d'un cabinet d'électro-épilation ?",options:["Publicité Facebook/Meta","Bouche-à-oreille premium — ROI infini","Flyers dans les boîtes aux lettres","Radio locale"],correct:1,explanation:"✅ Bouche-à-oreille premium — ROI infini, coût 0, conversion ~100%. Résultats visibles + témoignages = nouvelles clientes via réseau existant."},
+      {q:"Modèle de tarification BSL recommandé ?",options:["Prix au poil traité","Prix au temps + forfaits zone avec engagement","Prix dégressif si retard de paiement","Prix unique pour toutes les zones"],correct:1,explanation:"✅ Prix au temps (15min → 1h30) + forfaits zone avec engagement 6-10 séances (remise 10-15%). Couvre le temps réel et incite à l'engagement client."},
+      {q:"Quel est le % de redevance CA dans le partenariat BSL 3 ans ?",options:["5% du CA","10% du CA + 10% capital BSL","15% du CA","25% tout inclus"],correct:1,explanation:"✅ 10% de redevance CA + 10% de capital BSL durant 3 ans. Rachat des parts possible à terme. En échange : Apilus fourni + centrale d'achat + accompagnement."},
+      {q:"Combien d'heures facturables par jour dans un cabinet bien rempli ?",options:["2-3h maximum","5-7h facturables","8-10h facturables","12-14h pour maximiser le CA"],correct:2,explanation:"✅ 8-10h facturables — au-delà, fatigue physique et qualité dégradée. Qualité > quantité en électro-épilation (travail de précision)."},
+      {q:"Le bouche-à-oreille est-il le canal à plus fort ROI ?",options:["Vrai — coût 0, conversion maximale","Faux — les réseaux sociaux sont plus efficaces"],correct:0,explanation:"✅ VRAI. Coût 0, qualification maximale, conversion proche de 100% si les témoignages sont réels. Demander systématiquement un avis après chaque résultat positif."},
+      {q:"Faut-il demander un acompte avant chaque pack de séances ?",options:["Vrai — 30% filtre les annulations","Faux — l'acompte nuit à la confiance"],correct:0,explanation:"✅ VRAI. Acompte 30% à l'inscription filtre les tire-kickers, engage la cliente et réduit les no-shows. Afficher clairement la politique d'acompte."},
+      {q:"Peut-on publier des photos avant/après sans consentement ?",options:["Vrai — dans un cadre professionnel","Faux — consentement écrit RGPD obligatoire"],correct:1,explanation:"❌ FAUX. Consentement écrit obligatoire (RGPD + déontologie professionnelle). Toujours obtenir avant publication, même en stories Instagram."},
+      {q:"Le partenariat BSL 3 ans inclut l'Apilus XCell Pro fourni ?",options:["Vrai — appareil inclus + centrale d'achat","Faux — il faut l'acheter séparément"],correct:0,explanation:"✅ VRAI. Le partenariat BSL 3 ans inclut : Apilus XCell Pro fourni + centrale d'achat négociée + accompagnement + réseau partenaires BSL."},
+      {q:"Citez les 4 typologies clientes BSL :",options:["Hirsutisme · laser · hommes · acné","Hirsutisme · repousse paradoxale · hommes · finitions post-laser","Grossesse · SOPK · hommes · poils blancs","Épilation · laser · cire · définitif"],correct:1,explanation:"✅ Les 4 typologies : Hirsutisme (SOPK/hormonal/génétique), Repousse paradoxale post-laser/cire, Hommes (dos/bras/barbe/transition), Finitions post-laser (poils blancs/fins)."},
+      {q:"Quelle est la règle FDA sur l'électro-épilation ?",options:["C'est une méthode temporaire reconnue","C'est la seule méthode d'épilation définitive reconnue par la FDA","La FDA ne régule pas l'électro-épilation","Le laser est la seule méthode reconnue"],correct:1,explanation:"✅ L'électro-épilation est la SEULE méthode d'épilation définitive reconnue par la FDA. C'est l'argument majeur de BSL face au laser."},
+    ]
+  }
+};
+
+const PASS_THRESHOLD = 0.70;
+let currentModule = 1;
+let currentQ = 0;
+let score = 0;
+let answered = false;
+
+function getModuleFromURL() {
+  const p = new URLSearchParams(window.location.search);
+  const m = parseInt(p.get('m') || p.get('module') || '1');
+  return MODULES[m] ? m : 1;
+}
+
+function render() {
+  const app = document.getElementById('app');
+  const mod = MODULES[currentModule];
+  const total = mod.questions.length;
+
+  if (currentQ === -1) {
+    // Intro
+    app.innerHTML = `
+      <div class="intro-screen">
+        <div class="module-badge">📚 ${mod.title}</div>
+        <h1 class="intro-title">${mod.subtitle}</h1>
+        <div class="gold-line"></div>
+        <p class="intro-sub">Testez vos connaissances sur ce module. Vous devez obtenir au moins <strong style="color:var(--gold)">70%</strong> pour valider.</p>
+        <div class="intro-rules">
+          <div class="rule"><span class="rule-icon">📝</span>${total} questions à choix multiple</div>
+          <div class="rule"><span class="rule-icon">⚡</span>Feedback immédiat après chaque réponse</div>
+          <div class="rule"><span class="rule-icon">🎯</span>Score minimum : 70% (${Math.ceil(total*0.7)}/${total} bonnes réponses)</div>
+          <div class="rule"><span class="rule-icon">🔄</span>Tentatives illimitées</div>
+        </div>
+        <button class="start-btn" onclick="startQuiz()">Commencer le quiz →</button>
+      </div>`;
+    return;
+  }
+
+  if (currentQ >= total) {
+    // Score
+    const pct = Math.round((score/total)*100);
+    const pass = pct >= 70;
+    app.innerHTML = `
+      <div class="score-screen" style="display:block">
+        <div class="score-circle ${pass?'pass':'fail'}">
+          <span class="score-num">${pct}<span style="font-size:1.2rem">%</span></span>
+          <span class="score-pct">${score}/${total} correctes</span>
+        </div>
+        <h2 class="score-verdict">${pass ? '✅ Module validé !' : '❌ Continuez à réviser'}</h2>
+        <p class="score-sub">${pass
+          ? `Félicitations ! Vous maîtrisez <strong>${mod.subtitle}</strong>. Passez au module suivant.`
+          : `Score insuffisant (minimum 70%). Relisez vos notes sur <strong>${mod.subtitle}</strong> et réessayez.`}</p>
+        <button class="retry-btn" onclick="retryQuiz()">🔄 Recommencer le quiz</button>
+        <div class="score-breakdown">
+          <div class="breakdown-item"><div class="breakdown-num" style="color:var(--green)">${score}</div><div class="breakdown-label">Correctes</div></div>
+          <div class="breakdown-item"><div class="breakdown-num" style="color:var(--red)">${total-score}</div><div class="breakdown-label">Incorrectes</div></div>
+          <div class="breakdown-item"><div class="breakdown-num" style="color:var(--gold)">${pct}%</div><div class="breakdown-label">Score final</div></div>
+        </div>
+      </div>`;
+    return;
+  }
+
+  // Question
+  const q = mod.questions[currentQ];
+  const letters = ['A','B','C','D'];
+  const pct = Math.round((currentQ/total)*100);
+
+  app.innerHTML = `
+    <div class="module-badge">📚 ${mod.title} · ${mod.subtitle}</div>
+    <div class="progress-wrap">
+      <div class="progress-info"><span>Question ${currentQ+1} sur ${total}</span><span>${score} correcte${score>1?'s':''}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="card">
+      <div class="question-header">
+        <div class="q-number">Question ${currentQ+1}</div>
+        <div class="q-text">${q.q}</div>
+      </div>
+      <div class="answers" id="answers">
+        ${q.options.map((opt,i) => `
+          <button class="answer-btn" onclick="selectAnswer(${i})" id="btn-${i}">
+            <span class="letter">${letters[i]}</span>
+            <span>${opt}</span>
+          </button>`).join('')}
+      </div>
+      <div class="feedback" id="feedback"></div>
+      <div class="next-wrap" id="next-wrap">
+        <button class="next-btn" onclick="nextQuestion()">${currentQ+1 < total ? 'Question suivante →' : 'Voir mon score →'}</button>
+      </div>
+    </div>`;
+}
+
+function startQuiz() { currentQ = 0; render(); }
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+  const q = MODULES[currentModule].questions[currentQ];
+  const isCorrect = idx === q.correct;
+  if (isCorrect) score++;
+
+  const btns = document.querySelectorAll('.answer-btn');
+  btns.forEach((btn, i) => {
+    btn.disabled = true;
+    if (i === q.correct) btn.classList.add(idx === i ? 'correct' : 'reveal');
+    if (i === idx && !isCorrect) btn.classList.add('wrong');
+  });
+
+  const fb = document.getElementById('feedback');
+  fb.className = `feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  fb.innerHTML = q.explanation;
+
+  document.getElementById('next-wrap').className = 'next-wrap show';
+}
+
+function nextQuestion() {
+  currentQ++;
+  answered = false;
+  render();
+}
+
+function retryQuiz() {
+  currentQ = 0;
+  score = 0;
+  answered = false;
+  render();
+}
+
+// Init
+currentModule = getModuleFromURL();
+currentQ = -1;
+render();
+</script>
+</body>
+</html>

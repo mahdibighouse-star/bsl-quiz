@@ -1,0 +1,39 @@
+[[redirects]]
+  from = "/m1"
+  to = "/quiz.html?m=1"
+  status = 200
+
+[[redirects]]
+  from = "/m2"
+  to = "/quiz.html?m=2"
+  status = 200
+
+[[redirects]]
+  from = "/m3"
+  to = "/quiz.html?m=3"
+  status = 200
+
+[[redirects]]
+  from = "/m4"
+  to = "/quiz.html?m=4"
+  status = 200
+
+[[redirects]]
+  from = "/m5"
+  to = "/quiz.html?m=5"
+  status = 200
+
+[[redirects]]
+  from = "/m6"
+  to = "/quiz.html?m=6"
+  status = 200
+
+[[redirects]]
+  from = "/m7"
+  to = "/quiz.html?m=7"
+  status = 200
+
+[[redirects]]
+  from = "/"
+  to = "/quiz.html?m=1"
+  status = 200
