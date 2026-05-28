@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BSL · Espace formation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{ --gold:#C9A94D; --gold-soft:#e3c976; --gold-deep:#9c7e2f; --dark:#080808; --cream:#F5F0E8; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--cream);overflow:hidden;
+    display:flex;align-items:center;
+    background:
+      radial-gradient(120% 130% at 85% -20%, rgba(201,169,77,.22) 0%, transparent 50%),
+      radial-gradient(90% 110% at -10% 120%, rgba(201,169,77,.10) 0%, transparent 55%),
+      var(--dark);
+  }
+  body::after{
+    content:"";position:fixed;inset:0;pointer-events:none;
+    background-image:linear-gradient(rgba(201,169,77,.05) 1px,transparent 1px);
+    background-size:100% 40px;opacity:.55;
+  }
+  .wrap{position:relative;z-index:2;width:100%;padding:40px 46px}
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+  .brand .mark{
+    font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:600;letter-spacing:.02em;color:#fff;
+  }
+  .brand .mark b{color:var(--gold-soft);font-weight:600}
+  .brand .div{width:1px;height:18px;background:rgba(201,169,77,.4)}
+  .brand .tag{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:var(--gold)}
+  .eyebrow{display:inline-flex;align-items:center;gap:11px;font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+  .eyebrow .bar{width:34px;height:1px;background:var(--gold)}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:500;font-size:clamp(30px,5vw,50px);line-height:1.03;color:#fff;letter-spacing:-.01em}
+  h1 .g{font-style:italic;background:linear-gradient(90deg,var(--gold-soft),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  p.sub{margin-top:18px;max-width:640px;font-size:14.5px;line-height:1.65;color:rgba(245,240,232,.72)}
+  .meta{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px}
+  .pill{font-size:11px;letter-spacing:.04em;color:var(--gold-soft);border:1px solid rgba(201,169,77,.35);border-radius:999px;padding:6px 14px;background:rgba(201,169,77,.06)}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="brand">
+      <span class="mark">B Skin <b>Legacy</b> Invest</span>
+      <span class="div"></span>
+      <span class="tag">Espace formation</span>
+    </div>
+    <p class="eyebrow"><span class="bar"></span>Électro-épilation permanente · Apilus 27 MHz</p>
+    <h1>Bienvenue dans votre <span class="g">parcours</span> de formation</h1>
+    <p class="sub">Sept modules pour maîtriser la thermolyse haute fréquence — de l'anatomie du poil au lancement de votre cabinet. Théorie à votre rythme, quiz de validation, et pratique encadrée à Bruxelles.</p>
+    <div class="meta">
+      <span class="pill">7 modules</span>
+      <span class="pill">Validation 70 %</span>
+      <span class="pill">Attestation BSL</span>
+    </div>
+  </div>
+</body>
+</html>
