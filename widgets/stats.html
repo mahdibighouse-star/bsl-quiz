@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BSL · Repères</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{--gold:#C9A94D;--gold-soft:#e3c976;--dark:#080808;--cream:#F5F0E8;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);
+    background:radial-gradient(100% 130% at 50% -30%,rgba(201,169,77,.13) 0%,transparent 55%),var(--dark);
+    padding:38px 40px;border-top:1px solid rgba(201,169,77,.12);border-bottom:1px solid rgba(201,169,77,.12)}
+  .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center}
+  .n{font-family:'Cormorant Garamond',serif;font-size:46px;line-height:1;
+    background:linear-gradient(90deg,var(--gold-soft),var(--gold));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+  .l{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(245,240,232,.55);margin-top:12px}
+  .cell+.cell{border-left:1px solid rgba(201,169,77,.12)}
+  @media(max-width:640px){.grid{grid-template-columns:repeat(2,1fr);gap:32px 16px}.cell+.cell{border-left:none}}
+</style></head>
+<body>
+  <div class="grid">
+    <div class="cell"><div class="n">7</div><div class="l">Modules</div></div>
+    <div class="cell"><div class="n">70 %</div><div class="l">Seuil de validation</div></div>
+    <div class="cell"><div class="n">27 MHz</div><div class="l">Technique Apilus</div></div>
+    <div class="cell"><div class="n">3</div><div class="l">Places max / session</div></div>
+  </div>
+</body></html>

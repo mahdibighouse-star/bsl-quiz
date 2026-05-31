@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr"><head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BSL · Prochaine session</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{--gold:#C9A94D;--gold-soft:#e3c976;--dark:#080808;--cream:#F5F0E8;}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--cream);
+    background:radial-gradient(110% 130% at 80% -20%,rgba(201,169,77,.20) 0%,transparent 50%),var(--dark);
+    padding:34px 40px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px}
+  .left .eyebrow{font-size:10px;font-weight:600;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:10px}
+  .left .eyebrow .bar{width:28px;height:1px;background:var(--gold)}
+  .left .date{font-family:'Cormorant Garamond',serif;font-size:30px;color:#fff;margin-top:8px}
+  .left .date .g{font-style:italic;color:var(--gold-soft)}
+  .clock{display:flex;gap:14px}
+  .unit{min-width:64px;text-align:center;background:rgba(201,169,77,.06);border:1px solid rgba(201,169,77,.3);border-radius:14px;padding:12px 10px}
+  .unit .v{font-family:'Cormorant Garamond',serif;font-size:32px;line-height:1;color:#fff}
+  .unit .k{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:rgba(245,240,232,.5);margin-top:6px}
+  .passed{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:24px;color:var(--gold-soft)}
+</style></head>
+<body>
+  <div class="left">
+    <div class="eyebrow"><span class="bar"></span>Prochaine session</div>
+    <div class="date" id="label">Session intensive · <span class="g" id="dateText">26 juin 2026</span></div>
+  </div>
+  <div class="clock" id="clock">
+    <div class="unit"><div class="v" id="d">--</div><div class="k">Jours</div></div>
+    <div class="unit"><div class="v" id="h">--</div><div class="k">Heures</div></div>
+    <div class="unit"><div class="v" id="m">--</div><div class="k">Min</div></div>
+  </div>
+  <script>
+    // Target date configurable via ?d=YYYY-MM-DD ; default = next intensive.
+    var params=new URLSearchParams(location.search);
+    var iso=params.get('d')||'2026-06-26';
+    var labelTxt=params.get('label');
+    if(labelTxt){document.getElementById('label').innerHTML=labelTxt;}
+    else{
+      var dt=new Date(iso+'T09:00:00');
+      var fmt=dt.toLocaleDateString('fr-BE',{day:'numeric',month:'long',year:'numeric'});
+      document.getElementById('dateText').textContent=fmt;
+    }
+    var target=new Date(iso+'T09:00:00').getTime();
+    function tick(){
+      var diff=target-Date.now();
+      if(diff<=0){document.getElementById('clock').innerHTML='<span class="passed">Session en cours / à venir</span>';return;}
+      var d=Math.floor(diff/86400000),h=Math.floor(diff%86400000/3600000),m=Math.floor(diff%3600000/60000);
+      document.getElementById('d').textContent=d;
+      document.getElementById('h').textContent=String(h).padStart(2,'0');
+      document.getElementById('m').textContent=String(m).padStart(2,'0');
+    }
+    tick();setInterval(tick,30000);
+  </script>
+</body></html>
